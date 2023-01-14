@@ -61,7 +61,7 @@ export function UserContextProvider({
             const nuser = userJSON.data as IUser;
             setUser(nuser);
             console.log();
-            isStudent ? router.push("/") : router.push(`/Dashboard/`);
+            isStudent ? router.push("/") : router.push(`/Dashboard`);
             return true;
         } catch (e) {
             console.log(e);
@@ -71,6 +71,7 @@ export function UserContextProvider({
         //login
     };
     const refresh = useCallback(async () => {
+        // if (!isAuth) return;
         try {
             const userJSON = await client.get("/user/me");
 
