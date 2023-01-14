@@ -44,6 +44,7 @@ interface DashboardProp {
 }
 
 interface CourseDTO {
+    id: number;
     name: string;
     course_cover_url: string;
     curr_student: number;
@@ -57,8 +58,11 @@ interface DashboardDTO {
 
 export default function Dashboard(props: DashboardProp) {
     const router = useRouter();
-    const { user } = useUser();
+    const { user, ready } = useUser();
     async function getData() {
+        if (!ready || !user?.userID) return;
+        console.log(user);
+
         const res = await client.get(
             `/course/instructorDashboard/${user?.userID}`
         );
@@ -69,7 +73,7 @@ export default function Dashboard(props: DashboardProp) {
     const [data, setData] = useState<DashboardDTO | null>(null);
     useEffect(() => {
         getData();
-    }, []);
+    }, [ready, user]);
 
     const { classes } = useStyles();
 
@@ -175,7 +179,7 @@ export default function Dashboard(props: DashboardProp) {
                                 allStudents={data?.total_all_student ?? 0}
                                 key={course.name}
                                 onClick={() => {
-                                    router.push(`/course/${course.name}`);
+                                    router.push(`/Dashboard/${course.id}`);
                                 }}
                             ></DashboardCourseCard>
                         ))}
